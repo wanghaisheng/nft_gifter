@@ -3,7 +3,7 @@ import { Page, Card, Tabs, Banner, Spinner, Thumbnail, Button } from "@shopify/p
 import Router from 'next/router';
 import axios from "axios";
 import { Promise } from "bluebird";
-import NFTList from "./components/NFTList";
+import NFTList from "../components/NFTList";
 
 class Index extends React.Component {
   state = { selectedTab: 0, created: null };

@@ -4,8 +4,8 @@ import { ResourcePicker } from '@shopify/app-bridge-react';
 import _ from "lodash";
 import axios from "axios";
 import Router from 'next/router';
-import Dropzone from './components/Dropzone';
-import { pinFile, pinJSON } from './utill';
+import Dropzone from '../components/Dropzone';
+import { pinFile, pinJSON } from '../components/utill';
 
 const URL = process.env.NEXT_PUBLIC_BASE_URL;
 
