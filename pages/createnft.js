@@ -1,5 +1,5 @@
 import React from "react";
-import { Page, Card, TextField, FormLayout, Button, Thumbnail, InlineError, Modal } from "@shopify/polaris";
+import { Page, Card, TextField, FormLayout, Button, Thumbnail, InlineError, Modal, TextContainer, ProgressBar } from "@shopify/polaris";
 import { ResourcePicker } from '@shopify/app-bridge-react';
 import _ from "lodash";
 import axios from "axios";
@@ -13,7 +13,7 @@ class Createnft extends React.Component {
     state = {
         title: "", description: "", productLink: null, openProduct: false, image: null,
         errors: { title: false, description: false, image: false, productLink: false },
-        loading: false, toast: false
+        loading: false, toast: false, loadingPercent: 0
     };
 
     componentDidMount() {
@@ -34,6 +34,7 @@ class Createnft extends React.Component {
                 this.setState({ errors: errors, loading: true });
                 try {
                     let ipfsFile = await pinFile({ image: this.state.image, name: this.state.title });
+                    this.setState({ loadingPercent: 33 });
                     let ipfsMeta = await pinJSON({
                         filename: this.state.title,
                         data: {
@@ -42,7 +43,7 @@ class Createnft extends React.Component {
                             image: `ipfs://${ipfsFile}`
                         }
                     });
-
+                    this.setState({ loadingPercent: 66 });
                     await axios({
                         method: 'GET',
                         url: `${URL}/mintNFT`,
@@ -53,6 +54,8 @@ class Createnft extends React.Component {
                             productLink: this.state.productLink.title
                         },
                     });
+
+                    this.setState({ loadingPercent: 100 });
 
                     this.setState({ loading: false });
                     Router.push({
@@ -75,7 +78,17 @@ class Createnft extends React.Component {
 
         const loadingModal = () => {
             return (
-                <Modal open={this.state.loading} title="Minting your NFT" loading={true}>
+                <Modal open={this.state.loading} title="Minting your NFT">
+                    <Modal.Section>
+                        <ProgressBar progress={this.state.loadingPercent} />
+                        <TextContainer>
+                            <p style={{
+                                fontWeight: 'bold'
+                            }}>
+                                Note: Minting a NFT can take up to 30s
+                            </p>
+                        </TextContainer>
+                    </Modal.Section>
                 </Modal>
             );
         };
