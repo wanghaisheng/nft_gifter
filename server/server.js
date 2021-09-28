@@ -54,12 +54,14 @@ app.prepare().then(async () => {
         });
 
         try {
+          console.log(process.env.FUNCTIONS_URL);
           await Shopify.Webhooks.Registry.register({
             shop,
             accessToken,
             path: "/webhooks",
             topic: "ORDERS_PAID",
             webhookHandler: async (topic, shop, body) => {
+              console.log(process.env.FUNCTIONS_URL);
               console.log(shop);
               let items = body.line_items.map(x => x.title);
               let buyer = {
@@ -68,7 +70,7 @@ app.prepare().then(async () => {
               };
               await axios({
                 method: "post",
-                url: `${process.env.BASE_URL}/sendEmailNFT`,
+                url: `${process.env.FUNCTIONS_URL}/sendEmailNFT`,
                 data: {
                   items: items,
                   buyer: buyer,
